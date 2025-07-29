@@ -7,12 +7,16 @@ export interface Chain {
   chain_name: string;
 }
 
+
 export interface User {
   user_id: number;
   display_name: string;
   email: string;
   is_active: boolean;
+  created_at: string;
 }
+
+
 
 export interface Vendor {
   vendor_id: number;
@@ -32,4 +36,13 @@ export interface MenuItem {
 
 export interface VendorWithChainName extends Vendor {
   chain_name: string;
+}
+
+export interface UserVendor {
+  vendor_id: number;
+  vendor_name: string;
+}
+
+export interface UserWithVendors extends User {
+  vendors: UserVendor[];
 }

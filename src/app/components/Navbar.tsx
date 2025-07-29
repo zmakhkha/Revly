@@ -4,28 +4,29 @@ import { Menu, Tooltip } from 'antd';
 import { usePathname, useRouter } from 'next/navigation';
 import { menuItems } from '@/app/data/navbar';
 
-
-
 const Navbar = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const elements = menuItems;
+
+  // Map menuItems into the shape expected by Menu's items prop
+  const items = menuItems.map(({ key, icon, title, description }) => ({
+    key,
+    icon,
+    label: (
+      <Tooltip title={description} placement="right">
+        {title}
+      </Tooltip>
+    ),
+  }));
 
   return (
     <Menu
       mode="inline"
       selectedKeys={[pathname]}
       onClick={(e) => router.push(e.key)}
+      items={items} // use items instead of children
       style={{ height: '100vh', width: 200 }}
-    >
-      {elements.map((item) => (
-        <Menu.Item key={item.key} icon={item.icon}>
-          <Tooltip title={item.description}>
-            {item.title}
-          </Tooltip>
-        </Menu.Item>
-      ))}
-    </Menu>
+    />
   );
 };
 
