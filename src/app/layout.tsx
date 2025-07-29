@@ -1,5 +1,3 @@
-// app/layout.tsx
-
 import { ReactNode } from 'react';
 import Navbar from '@/app/components/Navbar';
 import 'antd/dist/reset.css';

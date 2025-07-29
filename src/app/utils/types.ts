@@ -20,6 +20,7 @@ export interface Vendor {
   chain_id: number;
   longitude: number;
   latitude: number;
+  created_at?: string;
 }
 
 export interface MenuItem {
@@ -27,4 +28,8 @@ export interface MenuItem {
   title: string;
   icon: ReactNode;
   description: string;
+}
+
+export interface VendorWithChainName extends Vendor {
+  chain_name: string;
 }
