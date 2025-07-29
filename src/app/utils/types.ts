@@ -1,3 +1,7 @@
+'use client'
+
+import { ReactNode } from "react";
+
 export interface Chain {
   chain_id: number;
   chain_name: string;
@@ -16,4 +20,11 @@ export interface Vendor {
   chain_id: number;
   longitude: number;
   latitude: number;
+}
+
+export interface MenuItem {
+  key: string;
+  title: string;
+  icon: ReactNode;
+  description: string;
 }
