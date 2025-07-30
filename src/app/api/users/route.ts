@@ -15,6 +15,7 @@ type RawRow = {
   vendor_name: string | null;
 };
 
+// get vendorss for each user
 function formatUsersWithVendors(rows: RawRow[]): UserWithVendors[] {
   const userMap = new Map<number, UserWithVendors>();
 

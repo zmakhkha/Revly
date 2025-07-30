@@ -3,8 +3,11 @@
 import { Menu, Tooltip } from 'antd';
 import { usePathname, useRouter } from 'next/navigation';
 import { menuItems } from '@/app/data/navbar';
+import { useEffect } from 'react';
+
 
 const Navbar = () => {
+
   const router = useRouter();
   const pathname = usePathname();
 

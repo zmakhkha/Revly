@@ -57,3 +57,26 @@ export async function PUT(
     return NextResponse.json({ error: "Failed to update user" }, { status: 500 });
   }
 }
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const userId = Number(params.id);
+  console.log("DELETE /api/users/[id] userId:", userId);
+  if (isNaN(userId)) {
+    return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
+  }
+
+  try {
+    // Delete related vendors first (if needed)
+    await db.delete(usersVendors).where(eq(usersVendors.userId, userId));
+    // Delete the user
+    await db.delete(user).where(eq(user.userId, userId));
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("DELETE /api/users/[id] error:", error);
+    return NextResponse.json({ error: "Failed to delete user" }, { status: 500 });
+  }
+}

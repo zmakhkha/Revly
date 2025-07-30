@@ -6,9 +6,8 @@ import { Table, Typography, Tag, Tooltip } from "antd";
 import { UserWithVendors } from "@/app/utils/types";
 import FloatingButton from "../components/FloatingButton";
 import CreateUserModal from "../components/CreateUserModal";
-import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
-import { title } from "process";
 import { ModifyUserModal } from "../components/ModifyUserModal";
+import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
 
