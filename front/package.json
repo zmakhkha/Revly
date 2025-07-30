@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-     "predev": "npx drizzle-kit generate && npx drizzle-kit push && npx tsx ./src/db/seed.ts",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
@@ -11,29 +10,18 @@
   },
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
-    "@ant-design/v5-patch-for-react-19": "^1.0.3",
-    "@libsql/client": "^0.15.10",
     "antd": "^5.26.7",
-    "better-sqlite3": "^12.2.0",
-    "csv-parse": "^6.1.0",
-    "dotenv": "^17.2.1",
     "next": "15.4.4",
     "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "sqlite3": "^5.1.7"
+    "react-dom": "19.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@types/better-sqlite3": "^7.6.13",
-    "@types/csv-parse": "^1.1.12",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "drizzle-kit": "^0.31.4",
-    "drizzle-orm": "^0.44.4",
     "eslint": "^9",
     "eslint-config-next": "15.4.4",
-    "tsx": "^4.20.3",
     "typescript": "^5"
   }
 }

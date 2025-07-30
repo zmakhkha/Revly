@@ -1,0 +1,6 @@
+// generate sql migrations
+// npx drizzle-kit generate
+
+
+// Push the Migration (Apply It)
+// npx drizzle-kit push
