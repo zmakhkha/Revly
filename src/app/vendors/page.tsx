@@ -2,12 +2,25 @@
 'use client';
 
 import { Table, Typography } from 'antd';
-import { vendors } from '@/app/data/vendors';
 import { VendorWithChainName } from '@/app/utils/types';
+import { useState, useEffect } from 'react';
 
 const { Title } = Typography;
 
 export default function VendorsPage() {
+  const[vendors, setVendors] = useState<VendorWithChainName[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchVendors = async () => {
+      const res = await fetch("/api/vendors");
+      const data = await res.json();
+      setVendors(data);
+      setLoading(false);
+    };
+    fetchVendors();
+  }, []);
+
   const columns = [
     {
       title: 'Name',
@@ -49,6 +62,9 @@ export default function VendorsPage() {
     },
   ];
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
     <div>
       <Title level={2}>Table of Vendors</Title>

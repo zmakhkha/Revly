@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-     "predev": "npx drizzle-kit generate && npx drizzle-kit push && npx tsx ./src/db/seed.ts",
+    "predev": "del drizzle\\db.sqlite && drizzle-kit generate && npx drizzle-kit push && npx tsx ./src/db/seed.ts",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",

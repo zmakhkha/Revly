@@ -13,14 +13,15 @@ function readCSV(filePath: string) {
 }
 
 async function seed() {
-  const now = new Date().toISOString();
+  const now = new Date();
+  const formattedNow = `${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}-${now.getFullYear()}`;
 
   const userData = readCSV(path.join(__dirname, 'data', 'users.csv')).map((u: any) => ({
-    user_id: +u.user_id,
-    display_name: u.display_name,
+    userId: +u.user_id,
+    displayName: u.display_name,
     email: u.email,
     is_active: u.is_active === 'TRUE' ? 1 : 0,
-    created_at: now,
+    createdAt: formattedNow,
   }));
 
   const vendorsData = readCSV(path.join(__dirname, 'data', 'vendors.csv')).map((v: any) => ({
@@ -29,13 +30,13 @@ async function seed() {
     chainId: +v.chain_id,
     longitude: parseFloat(v.longitude),
     latitude: parseFloat(v.latitude),
-    created_at: now,
+    createdAt: formattedNow,
   }));
 
   const chainData = readCSV(path.join(__dirname, 'data', 'chains.csv')).map((c: any) => ({
     chainId: +c.chain_id,
     name: c.chain_name,
-    created_at: now,
+    createdAt: formattedNow,
   }));
 
   await db.insert(user).values(userData);
