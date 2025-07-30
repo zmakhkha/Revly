@@ -2,20 +2,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Table, Typography, Tag, Tooltip, Switch } from "antd";
+import { Table, Typography, Tag, Tooltip } from "antd";
 import { UserWithVendors } from "@/app/utils/types";
 import FloatingButton from "../components/FloatingButton";
-import UserModal from "../components/CreateUserModal";
+import CreateUserModal from "../components/CreateUserModal";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { title } from "process";
+import { ModifyUserModal } from "../components/ModifyUserModal";
 
 const { Title } = Typography;
-
 
 export default function UsersPage() {
   const [users, setUsers] = useState<UserWithVendors[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isModifyModalOpen, setIsModifyModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<UserWithVendors | null>(
+    null
+  );
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -24,7 +28,6 @@ export default function UsersPage() {
       const data: UserWithVendors[] = await res.json();
       setUsers(data);
     } catch {
-      // handle error
     } finally {
       setLoading(false);
     }
@@ -75,6 +78,22 @@ export default function UsersPage() {
         </>
       ),
     },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (_: any, record: UserWithVendors) => (
+        <Tooltip title="Edit user">
+          <a
+            onClick={() => {
+              setSelectedUser(record);
+              setIsModifyModalOpen(true);
+            }}
+          >
+            Edit
+          </a>
+        </Tooltip>
+      ),
+    },
   ];
 
   if (loading) return <div>Loading users...</div>;
@@ -90,12 +109,23 @@ export default function UsersPage() {
           pagination={false}
         />
       </div>
-      <FloatingButton onClick={() => setIsModalOpen(true)} />
-      <UserModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+      <FloatingButton onClick={() => setIsCreateModalOpen(true)} />
+      <CreateUserModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
         onUserCreated={fetchUsers}
       />
+      {isModifyModalOpen && selectedUser && (
+        <ModifyUserModal
+          open={isModifyModalOpen}
+          onClose={() => {
+            setIsModifyModalOpen(false);
+            setSelectedUser(null);
+          }}
+          user={selectedUser}
+          onUpdate={fetchUsers}
+        />
+      )}
     </>
   );
 }

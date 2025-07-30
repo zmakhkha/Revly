@@ -3,7 +3,6 @@ import { user, vendor, usersVendors } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import { UserWithVendors } from "@/app/utils/types";
-// pages/api/users.ts (or app/api/users/route.ts if using Next.js App Router)
 
 
 type RawRow = {

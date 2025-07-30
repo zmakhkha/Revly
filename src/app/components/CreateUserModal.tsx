@@ -8,7 +8,7 @@ import type { Vendor } from "@/app/utils/types";
 type UserModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  onUserCreated: () => void; // Callback to refresh user list after create
+  onUserCreated: () => void;
 };
 
 export default function UserModal({ isOpen, onClose, onUserCreated }: UserModalProps) {
