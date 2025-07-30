@@ -4,22 +4,33 @@
 import { useEffect, useState } from "react";
 import { Table, Typography, Tag, Tooltip, Switch } from "antd";
 import { UserWithVendors } from "@/app/utils/types";
+import FloatingButton from "../components/FloatingButton";
+import UserModal from "../components/CreateUserModal";
+import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import { title } from "process";
 
 const { Title } = Typography;
+
 
 export default function UsersPage() {
   const [users, setUsers] = useState<UserWithVendors[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
+  const fetchUsers = async () => {
+    setLoading(true);
+    try {
       const res = await fetch("/api/users");
       const data: UserWithVendors[] = await res.json();
-      console.log("Fetched users:", data);
       setUsers(data);
+    } catch {
+      // handle error
+    } finally {
       setLoading(false);
-    };
+    }
+  };
 
+  useEffect(() => {
     fetchUsers();
   }, []);
 
@@ -37,12 +48,12 @@ export default function UsersPage() {
     {
       title: "Is active",
       key: "is_active",
-      render: (_: any, record: UserWithVendors) => (
-        <Switch
-          checked={record.is_active}
-          // onChange={() => toggleUserStatus(record.user_id)}
-        />
-      ),
+      render: (_: any, record: UserWithVendors) =>
+        record.is_active ? (
+          <CheckCircleOutlined style={{ color: "green", fontSize: 18 }} />
+        ) : (
+          <CloseCircleOutlined style={{ color: "red", fontSize: 18 }} />
+        ),
     },
     {
       title: "Created at",
@@ -69,14 +80,22 @@ export default function UsersPage() {
   if (loading) return <div>Loading users...</div>;
 
   return (
-    <div>
-      <Title level={2}>Table of Users</Title>
-      <Table
-        dataSource={users}
-        columns={columns}
-        rowKey="user_id"
-        pagination={false}
+    <>
+      <div>
+        <Title level={2}>Table of Users</Title>
+        <Table
+          dataSource={users}
+          columns={columns}
+          rowKey="user_id"
+          pagination={false}
+        />
+      </div>
+      <FloatingButton onClick={() => setIsModalOpen(true)} />
+      <UserModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onUserCreated={fetchUsers}
       />
-    </div>
+    </>
   );
 }

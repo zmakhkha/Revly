@@ -1,8 +1,10 @@
 import { db } from "@/db/client";
 import { user, vendor, usersVendors } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { UserWithVendors } from "@/app/utils/types";
+// pages/api/users.ts (or app/api/users/route.ts if using Next.js App Router)
+
 
 type RawRow = {
   user_id: number;
@@ -61,5 +63,52 @@ export async function GET() {
   } catch (error) {
     console.error("Error fetching users with vendors:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
+}
+
+type RequestBody = {
+  email: string;
+  display_name?: string;
+  is_active: boolean;
+  vendor_ids: number[];
+};
+
+export async function POST(req: NextRequest) {
+  try {
+    const body: RequestBody = await req.json();
+
+    if (!body.email) {
+      return NextResponse.json({ error: "Email is required" }, { status: 400 });
+    }
+
+    // Insert user and get inserted ID
+    const insertResult = await db
+      .insert(user)
+      .values({
+        email: body.email,
+        displayName: body.display_name ?? "",
+        isActive: body.is_active ? 1 : 0,
+        createdAt: new Date().toISOString(),
+      })
+      .returning({ id: user.userId });
+
+    const insertedUserId = insertResult[0].id;
+
+    // Insert user-vendor relations if any
+    if (body.vendor_ids && body.vendor_ids.length > 0) {
+      const userVendorsToInsert = body.vendor_ids.map((vendorId) => ({
+        userId: insertedUserId,
+        vendorId,
+        isEnabled: 1,
+        createdAt: new Date().toISOString(),
+      }));
+
+      await db.insert(usersVendors).values(userVendorsToInsert);
+    }
+
+    return NextResponse.json({ message: "User created", userId: insertedUserId });
+  } catch (error) {
+    console.error("POST /api/users error:", error);
+    return NextResponse.json({ error: "Failed to create user" }, { status: 500 });
   }
 }

@@ -1,5 +1,7 @@
 import { ReactNode } from 'react';
 import Navbar from '@/app/components/Navbar';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import 'antd/dist/reset.css';
 import './globals.css';
 
@@ -25,6 +27,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
           <main className="main-content">
             {children}
+            <ToastContainer />
           </main>
         </div>
       </body>
