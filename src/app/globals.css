@@ -1,11 +1,8 @@
-/* app/globals.css */
-
 body {
   margin: 0;
   font-family: sans-serif;
 }
 
-/* Grid layout */
 .layout-grid {
   display: grid;
   grid-template-columns: 200px 1fr;

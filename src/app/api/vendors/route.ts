@@ -16,6 +16,7 @@ export async function GET() {
     })
     .from(vendor)
     .innerJoin(chain, eq(vendor.chainId, chain.chainId));
+    console.log("Fetched vendors:", data);
 
   return NextResponse.json(data);
 }

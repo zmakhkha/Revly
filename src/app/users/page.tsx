@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Table, Typography, Tag, Tooltip, Switch } from "antd";
 import { UserWithVendors } from "@/app/utils/types";
 import { toast } from "react-toastify";
@@ -44,7 +43,7 @@ export default function UsersPage() {
       title: "Is active",
       dataIndex: "is_active",
       key: "is_active",
-      render: (_: any, record: UserWithVendors) => {
+      render: (_: ReactNode, record: UserWithVendors) => {
         const handleToggle = async (checked: boolean) => {
           try {
             const res = await fetch(`/api/users/${record.user_id}`, {
@@ -81,7 +80,7 @@ export default function UsersPage() {
     {
       title: "List of vendors",
       key: "vendors",
-      render: (_: any, record: UserWithVendors) => (
+      render: (_: ReactNode, record: UserWithVendors) => (
         <>
           {record.vendors.map(({ vendor_id, vendor_name }) => (
             <Tooltip key={vendor_id} title={`ID: ${vendor_id}`}>
