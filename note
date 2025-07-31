@@ -1,0 +1,16 @@
+// generate sql migrations
+// npx drizzle-kit generate
+
+
+// Push the Migration (Apply It)
+// npx drizzle-kit push
+
+// The studio
+
+//  npx drizzle-kit studio
+
+// Database Schema
+	// One chain can have many vendors (locations).
+	// Each vendor belongs to a single chain.
+	// A User can manage multiple Vendors.
+	// A Vendor can be managed by multiple Users.

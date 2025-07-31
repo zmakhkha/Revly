@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Table, Typography, Tag, Tooltip, Switch } from "antd";
 import { UserWithVendors } from "@/app/utils/types";
 import { toast } from "react-toastify";
+import Loading from "../components/Loading";
 
 const { Title } = Typography;
 
@@ -59,7 +60,7 @@ export default function UsersPage() {
             if (!res.ok) throw new Error("Failed to update user");
 
             toast.success(
-              `User ${checked ? "activated" : "deactivated"} successfully.`
+              `User ${checked ? "activated" : "deactivated"} successfully.`, {position: "bottom-center"}
             );
               fetchUsers();
 
@@ -69,7 +70,7 @@ export default function UsersPage() {
           }
         };
 
-        return <Switch checked={!!record.is_active} onChange={handleToggle} />;
+        return <Switch checked={record.is_active} onChange={handleToggle} />;
       },
     },
     {
@@ -94,7 +95,7 @@ export default function UsersPage() {
     },
   ];
 
-  if (loading) return <div>Loading users...</div>;
+  if (loading) return <Loading />;
 
   return (
     <div>

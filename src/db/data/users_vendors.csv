@@ -1,0 +1,5 @@
+user_id,vendor_id,is_enabled
+1,1,TRUE
+1,2,FALSE
+2,3,TRUE
+3,1,FALSE

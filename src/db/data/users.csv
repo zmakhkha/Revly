@@ -1,3 +1,5 @@
 user_id,display_name,email,is_active
 1,John Doe,john.doe@mail.com,TRUE
 2,Natasha Smith,natasha.smith@mail.com,TRUE
+3,Zakaria Makhkhas,zakaria.makhkhas@gmail.com,TRUE
+4,Mohamed Ahmed,mohamed.ahmed@gmail.com,TRUE
