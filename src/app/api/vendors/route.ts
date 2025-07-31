@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const vendors = await db
+  const data = await db
     .select({
       vendor_id: vendor.vendorId,
       vendor_name: vendor.name,
@@ -17,5 +17,5 @@ export async function GET() {
     .from(vendor)
     .innerJoin(chain, eq(vendor.chainId, chain.chainId));
 
-  return NextResponse.json(vendors);
+  return NextResponse.json(data);
 }

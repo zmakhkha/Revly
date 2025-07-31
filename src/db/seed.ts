@@ -1,30 +1,49 @@
-import fs from 'fs';
-import path from 'path';
-import { parse } from 'csv-parse/sync';
-import { db } from './client';
-import { user, vendor, chain } from './schema';
+import fs from "fs";
+import path from "path";
+import { parse } from "csv-parse/sync";
+import { db } from "./client";
+import { user, vendor, chain } from "./schema";
 
-function readCSV(filePath: string) {
-  const content = fs.readFileSync(filePath);
+function parseCSVToObjects(filePath: string): Record<string, string>[] {
+  const content = fs.readFileSync(filePath, "utf-8");
   return parse(content, {
     columns: true,
     skip_empty_lines: true,
   });
 }
 
-async function seed() {
+function getFormattedDate(): string {
   const now = new Date();
-  const formattedNow = `${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}-${now.getFullYear()}`;
+  return `${String(now.getMonth() + 1).padStart(2, "0")}-${String(
+    now.getDate()
+  ).padStart(2, "0")}-${now.getFullYear()}`;
+}
 
-  const userData = readCSV(path.join(__dirname, 'data', 'users.csv')).map((u: any) => ({
+async function seedDatabase() {
+  const formattedNow = getFormattedDate();
+
+  const rawUsers = parseCSVToObjects(path.join(__dirname, "data", "users.csv"));
+  const usersToInsert = rawUsers.map((u) => ({
     userId: +u.user_id,
     displayName: u.display_name,
     email: u.email,
-    is_active: u.is_active === 'TRUE' ? 1 : 0,
+    is_active: u.is_active === "TRUE" ? 1 : 0,
     createdAt: formattedNow,
   }));
 
-  const vendorsData = readCSV(path.join(__dirname, 'data', 'vendors.csv')).map((v: any) => ({
+  const rawChains = parseCSVToObjects(
+    path.join(__dirname, "data", "chains.csv")
+  );
+  const chainsToInsert = rawChains.map((c) => ({
+    chainId: +c.chain_id,
+    name: c.chain_name,
+    createdAt: formattedNow,
+  }));
+
+  const rawVendors = parseCSVToObjects(
+    path.join(__dirname, "data", "vendors.csv")
+  );
+  const vendorsToInsert = rawVendors.map((v) => ({
     vendorId: +v.vendor_id,
     name: v.vendor_name,
     chainId: +v.chain_id,
@@ -33,17 +52,11 @@ async function seed() {
     createdAt: formattedNow,
   }));
 
-  const chainData = readCSV(path.join(__dirname, 'data', 'chains.csv')).map((c: any) => ({
-    chainId: +c.chain_id,
-    name: c.chain_name,
-    createdAt: formattedNow,
-  }));
+  await db.insert(user).values(usersToInsert);
+  await db.insert(chain).values(chainsToInsert);
+  await db.insert(vendor).values(vendorsToInsert);
 
-  await db.insert(user).values(userData);
-  await db.insert(chain).values(chainData);
-  await db.insert(vendor).values(vendorsData);
-
-  console.log('✅ Seeded successfully');
+  console.log("✅ Seeded successfully");
 }
 
-seed();
+seedDatabase();

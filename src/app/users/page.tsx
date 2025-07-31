@@ -2,23 +2,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Table, Typography, Tag, Tooltip } from "antd";
+import { Table, Typography, Tag, Tooltip, Switch } from "antd";
 import { UserWithVendors } from "@/app/utils/types";
-import FloatingButton from "../components/FloatingButton";
-import CreateUserModal from "../components/CreateUserModal";
-import { ModifyUserModal } from "../components/ModifyUserModal";
-import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import { toast } from "react-toastify";
 
 const { Title } = Typography;
 
 export default function UsersPage() {
   const [users, setUsers] = useState<UserWithVendors[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [isModifyModalOpen, setIsModifyModalOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<UserWithVendors | null>(
-    null
-  );
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -49,13 +41,36 @@ export default function UsersPage() {
     },
     {
       title: "Is active",
+      dataIndex: "is_active",
       key: "is_active",
-      render: (_: any, record: UserWithVendors) =>
-        record.is_active ? (
-          <CheckCircleOutlined style={{ color: "green", fontSize: 18 }} />
-        ) : (
-          <CloseCircleOutlined style={{ color: "red", fontSize: 18 }} />
-        ),
+      render: (_: any, record: UserWithVendors) => {
+        const handleToggle = async (checked: boolean) => {
+          try {
+            const res = await fetch(`/api/users/${record.user_id}`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                is_active: checked,
+              }),
+            });
+
+            if (!res.ok) throw new Error("Failed to update user");
+
+            toast.success(
+              `User ${checked ? "activated" : "deactivated"} successfully.`
+            );
+              fetchUsers();
+
+          } catch (error) {
+            toast.error("Error updating user.");
+            console.error(error);
+          }
+        };
+
+        return <Switch checked={!!record.is_active} onChange={handleToggle} />;
+      },
     },
     {
       title: "Created at",
@@ -77,54 +92,19 @@ export default function UsersPage() {
         </>
       ),
     },
-    {
-      title: "Actions",
-      key: "actions",
-      render: (_: any, record: UserWithVendors) => (
-        <Tooltip title="Edit user">
-          <a
-            onClick={() => {
-              setSelectedUser(record);
-              setIsModifyModalOpen(true);
-            }}
-          >
-            Edit
-          </a>
-        </Tooltip>
-      ),
-    },
   ];
 
   if (loading) return <div>Loading users...</div>;
 
   return (
-    <>
-      <div>
-        <Title level={2}>Table of Users</Title>
-        <Table
-          dataSource={users}
-          columns={columns}
-          rowKey="user_id"
-          pagination={false}
-        />
-      </div>
-      <FloatingButton onClick={() => setIsCreateModalOpen(true)} />
-      <CreateUserModal
-        isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
-        onUserCreated={fetchUsers}
+    <div>
+      <Title level={2}>Table of Users</Title>
+      <Table
+        dataSource={users}
+        columns={columns}
+        rowKey="user_id"
+        pagination={false}
       />
-      {isModifyModalOpen && selectedUser && (
-        <ModifyUserModal
-          open={isModifyModalOpen}
-          onClose={() => {
-            setIsModifyModalOpen(false);
-            setSelectedUser(null);
-          }}
-          user={selectedUser}
-          onUpdate={fetchUsers}
-        />
-      )}
-    </>
+    </div>
   );
 }

@@ -16,8 +16,6 @@ export interface User {
   created_at: string;
 }
 
-
-
 export interface Vendor {
   vendor_id: number;
   vendor_name: string;
@@ -46,3 +44,15 @@ export interface UserVendor {
 export interface UserWithVendors extends User {
   vendors: UserVendor[];
 }
+
+
+
+// Backend request body type for user updates
+
+// PUT
+export interface RequestBody  {
+  email: string;
+  display_name?: string;
+  is_active: boolean;
+  vendor_ids: number[];
+};
