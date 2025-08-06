@@ -13,7 +13,7 @@ export default function VendorsPage() {
 
   useEffect(() => {
     const fetchVendors = async () => {
-      const res = await fetch("/api/vendors");
+      const res = await fetch("http://localhost:8000/vendors");
       const data = await res.json();
       setVendors(data);
       setLoading(false);

@@ -15,7 +15,7 @@ export default function UsersPage() {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/users");
+      const res = await fetch("http://localhost:8000/users");
       const data: UserWithVendors[] = await res.json();
       setUsers(data);
     } catch {
@@ -46,7 +46,8 @@ export default function UsersPage() {
       render: (_: ReactNode, record: UserWithVendors) => {
         const handleToggle = async (checked: boolean) => {
           try {
-            const res = await fetch(`/api/users/${record.user_id}`, {
+            console.log("---------------------->", record.user_id)
+            const res = await fetch(`http://localhost:8000/users/${record.user_id}`, {
               method: "PUT",
               headers: {
                 "Content-Type": "application/json",
