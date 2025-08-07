@@ -43,3 +43,8 @@ drizzle/db.sqlite
 *.sql
 **/**.sql
 drizzle/meta
+
+#python
+.venv
+__pycache__
+*.db
