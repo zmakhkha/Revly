@@ -1,19 +1,17 @@
-import csv
 from datetime import datetime
 from db_config import SessionLocal, engine
 from db_models import Base, Chain, User, Vendor, UsersVendors
+import csv
 
-Base.metadata.create_all(bind=engine)
 db = SessionLocal()
-
-def seed_data():
+try:
+    Base.metadata.create_all(bind=engine)
+    
     # Insert Chains
     with open("data/chains.csv", newline="") as f:
         reader = csv.DictReader(f, delimiter=",")
         print("Inserting chains...")
-        print(reader.fieldnames)
         for row in reader:
-            print(row) 
             db.add(Chain(
                 chain_id=int(row['chain_id']),
                 name=row["chain_name"],
@@ -58,4 +56,9 @@ def seed_data():
             ))
 
     db.commit()
+    print("Seeding completed successfully.")
+except Exception as error:
+    db.rollback()
+    print(f"There was an error : {error}")
+finally:
     db.close()
